@@ -21,13 +21,18 @@ int main(int argc, char *argv[]){
 		return 0;
 	}
 	if(tmp == "-l"){
-		std::cout << "*list of algorithms*" << std::endl;
+		std::cout << alglist << std::endl;
 		return 0;
 	}
 	if(tmp != "-a"){
 		std::cout << "Unknown option: " << tmp << std::endl;
 	}
 	if(argc > 2){
+		std::string alg(argv[2]);
+		if(alg != "bubblesort"){
+			std::cout << "Not a valid sorting algorithm" << std::endl;
+			return 0;
+		}
 		std::random_device dev;
 		std::mt19937 rng(dev());
 		std::uniform_int_distribution<> dis(0, 359);	
@@ -48,12 +53,15 @@ int main(int argc, char *argv[]){
 				raw[h * Width + w] = col;
 			}
 		}
-		updatewindow(pixels, raw, &image, &window, &sprite);
-		bubblesort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
-	   	for (int h = 0; h < Height; ++h)
-     	{
-       		bubblesort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
-       	}
+
+		if(alg == "bubblesort"){
+			updatewindow(pixels, raw, &image, &window, &sprite);
+			bubblesort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+		   	for (int h = 0; h < Height; ++h)
+	     	{
+       			bubblesort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+        }
 
 		while (window.isOpen()){
 		    sf::Event event;
