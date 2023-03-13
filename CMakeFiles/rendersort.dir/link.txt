@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -rdynamic CMakeFiles/rendersort.dir/src/main.cpp.o -o rendersort  -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network 

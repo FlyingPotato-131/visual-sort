@@ -1,5 +1,5 @@
 #include <iostream>
-#include "algorinthms.cpp"
+#include "algorithms.cpp"
 
 
 bool compare(int a, int b)
