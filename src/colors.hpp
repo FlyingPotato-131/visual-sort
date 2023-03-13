@@ -15,16 +15,17 @@ rgb hsvrgb(hsv col){
 	float m = col.v - c;
 	char C = (c + m) * 255;
 	char X = (x + m) * 255;
-	if(0 <= col.h < 60)
-		return {C, X, 0};
-	if(60 <= col.h < 120)
-		return {X, C, 0};
-	if(120 <= col.h < 180)
-		return {0, C, X};
-	if(180 <= col.h < 240)
-		return {0, X, C};
-	if(240 <= col.h < 300)
-		return {X, 0, C};
+	char O = m * 255;
+	if(col.h >= 0 && col.h < 60)
+		return {C, X, O};
+	if(col.h >= 60 && col.h < 120)
+		return {X, C, O};
+	if(col.h >= 120 && col.h < 180)
+		return {O, C, X};
+	if(col.h >= 180 && col.h < 240)
+		return {O, X, C};
+	if(col.h >= 240 && col.h < 300)
+		return {X, O, C};
 	else
-		return {C, 0, X};
+		return {C, O, X};
 }
