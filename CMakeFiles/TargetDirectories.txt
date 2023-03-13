@@ -1,0 +1,3 @@
+/home/flyingpotato_131/repositories/visual-sort/CMakeFiles/rendersort.dir
+/home/flyingpotato_131/repositories/visual-sort/CMakeFiles/edit_cache.dir
+/home/flyingpotato_131/repositories/visual-sort/CMakeFiles/rebuild_cache.dir
