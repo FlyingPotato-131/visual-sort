@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
 	}
 	if(tmp == "-l"){
 		std::cout << alglist << std::endl;
+		std::cout << std::endl;
 		return 0;
 	}
 	if(tmp != "-a"){
@@ -29,7 +30,7 @@ int main(int argc, char *argv[]){
 	}
 	if(argc > 2){
 		std::string alg(argv[2]);
-		if(alg != "bubblesort"){
+		if(alg != "bubblesort" && alg != "shakersort" && alg != "combsort" && alg != "selectionsort" && alg != "quicksort"){
 			std::cout << "Not a valid sorting algorithm" << std::endl;
 			return 0;
 		}
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]){
 		sf::Texture image;
 		image.create(Width, Height);
 		sf::Sprite sprite(image);	
+		sprite.setScale(48, 48);
 		for (int h = 0; h < Height - 1; ++h)
 		{
 			for (int w = 0; w < Width; ++w)
@@ -53,14 +55,49 @@ int main(int argc, char *argv[]){
 				raw[h * Width + w] = col;
 			}
 		}
+		
+		updatewindow(pixels, raw, &image, &window, &sprite);
 
 		if(alg == "bubblesort"){
-			updatewindow(pixels, raw, &image, &window, &sprite);
 			bubblesort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
 		   	for (int h = 0; h < Height; ++h)
 	     	{
        			bubblesort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
        		}
+       		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "shakersort"){
+        	ShakerSort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			ShakerSort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "combsort"){
+        	CombSort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			CombSort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "selectionsort"){
+        	SelectionSort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			SelectionSort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "quicksort"){
+        	quicksort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			quicksort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
         }
 
 		while (window.isOpen()){
@@ -72,6 +109,7 @@ int main(int argc, char *argv[]){
 	               	return 0;
 	           	}
 	       	}
+	       	updatewindow(pixels, raw, &image, &window, &sprite);
 		}
 	}else{
 		std::cout << "please specify a sorting algorithm" << std::endl;

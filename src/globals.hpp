@@ -1,8 +1,8 @@
-int const Width = 200;
-int const Height = 150;
+int const Width = 30;
+int const Height = 20;
 
 #include <string>
-char alglist[] = "Valid sorting algorithms:\n   Bubblesort\n";
+char alglist[] = "Valid sorting algorithms:\n   bubblesort\n   shakesort\n   combsort\n   selectionsort\n   quicksort\n";
 // std::queue<std::function<void()>> actions;
 // std::mutex actions_mutex;
 // std::condition_variable actions_cv;

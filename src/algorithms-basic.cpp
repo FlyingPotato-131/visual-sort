@@ -111,3 +111,64 @@ void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T))
         swap(i, j);
     }
 }
+
+template<typename T, typename Pred>
+T *partition(T *begin, T *end, Pred predicate){
+    //int len = end - begin;
+    T *left = begin + 1;
+    T *right = end - 1;
+    while(right - left > 0){
+        if(predicate(left) == 0 && predicate(right) == 1){
+            swap(left, right);
+            // left ++;
+            // right --;
+        }else if(predicate(right) == 0){
+            right --;
+        }else if(predicate(left) == 1){
+            left ++;
+        }
+    }
+    return left;
+}
+
+template<typename T>
+void qsort(T *begin, T *end, bool(*compare)(const T, const T)){
+    // if(end - begin == 2){
+    //     if(!compare(*begin, begin[1]))
+    //         swap(begin, begin + 1);
+    //     return;
+    // }
+    if(end - begin > 1){
+        auto leseq = [begin, compare](T *x){return compare(*x, *begin);};
+        for (int i = 0; i < end - begin; ++i)
+        {
+            std::cout << begin[i] << " ";   
+        }
+        std::cout << std::endl;
+        T *pos = partition(begin, end, leseq);
+        // std::cout << pos - begin << " ";
+        //sswap(begin, pos);
+        // std::cout << *pos << " ";
+        // std::cout << *begin << " " << end[-1] << " ";
+        // for(int i = 0; i < end - begin; i++){
+        //  std::cout << begin[i];
+        // }
+        // std::cout << std::endl;
+        if(compare(*pos, *begin))
+            swap(begin, pos);
+         
+        for (int i = 0; i < end - begin; ++i)
+        {
+            std::cout << begin[i] << " ";   
+        }
+        std::cout << std::endl;
+        // if(pos - begin - 1 > 1){
+            // std::cout << "left" << std::endl;
+            qsort(begin, pos, compare);
+        // }
+        // if(end - pos - 2 > 2){
+            // std::cout << "right" << std::endl;
+            qsort(pos, end, compare);
+        // }
+    }
+}
