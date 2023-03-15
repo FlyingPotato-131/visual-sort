@@ -2,10 +2,10 @@
 
 makes a beautiful 2d demonstration of different sorting algorithms
 
-####to use:
+#### to use:
 `rendersort -a <algorithm>`
 
-####currently implemented algorithms:
+#### currently implemented algorithms:
 bubblesort
 shakersort
 combsort
