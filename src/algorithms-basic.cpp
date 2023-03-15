@@ -111,3 +111,105 @@ void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T))
         swap(i, j);
     }
 }
+
+template<typename T, typename Pred>
+T *partition(T *begin, T *end, Pred predicate){
+    //int len = end - begin;
+    T *left = begin + 1;
+    T *right = end - 1;
+    while(right - left > 0){
+        if(predicate(left) == 0 && predicate(right) == 1){
+            swap(left, right);
+            // left ++;
+            // right --;
+        }else if(predicate(right) == 0){
+            right --;
+        }else if(predicate(left) == 1){
+            left ++;
+        }
+    }
+    return left;
+}
+
+template<typename T>
+void qsort(T *begin, T *end, bool(*compare)(const T, const T)){
+    // if(end - begin == 2){
+    //     if(!compare(*begin, begin[1]))
+    //         swap(begin, begin + 1);
+    //     return;
+    // }
+    if(end - begin > 1){
+        auto leseq = [begin, compare](T *x){return compare(*x, *begin);};
+        for (int i = 0; i < end - begin; ++i)
+        {
+            std::cout << begin[i] << " ";   
+        }
+        std::cout << std::endl;
+        T *pos = partition(begin, end, leseq);
+        // std::cout << pos - begin << " ";
+        //sswap(begin, pos);
+        // std::cout << *pos << " ";
+        // std::cout << *begin << " " << end[-1] << " ";
+        // for(int i = 0; i < end - begin; i++){
+        //  std::cout << begin[i];
+        // }
+        // std::cout << std::endl;
+        if(compare(*pos, *begin))
+            swap(begin, pos);
+         
+        for (int i = 0; i < end - begin; ++i)
+        {
+            std::cout << begin[i] << " ";   
+        }
+        std::cout << std::endl;
+        // if(pos - begin - 1 > 1){
+            // std::cout << "left" << std::endl;
+            qsort(begin, pos, compare);
+        // }
+        // if(end - pos - 2 > 2){
+            // std::cout << "right" << std::endl;
+            qsort(pos, end, compare);
+        // }
+    }
+}
+
+// #include <vector>
+// #include <algorithm>
+
+template <typename T>
+void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T))
+{
+    // std::vector<T> tmp(abs(first - last));
+    T *tmp = new T[abs(first - last)];
+    // T *end = tmp + abs(first - last); 
+    T *i = first;
+    T *j = middle;
+    auto k = tmp;
+
+    while (i != middle && j != last) {
+        if (compare(*i, *j)) {
+            *k++ = *i++;
+        } else {
+            *k++ = *j++;
+        }
+    }
+
+    k = std::copy(i, middle, k);
+    k = std::copy(j, last, k);
+
+    std::copy(tmp, tmp + abs(first - last), first);
+}
+
+template <typename T>
+void merge_sort(T *first, T *last, bool(*compare)(const T, const T))
+{
+    if (abs(first - last) <= 1) {
+        return;
+    }
+
+    T *middle = std::next(first, abs(first - last) / 2);
+    merge_sort(first, middle, compare);
+    merge_sort(middle, last, compare);
+    // std::inplace_merge(first, middle, last, compare);
+    merge(first, middle, last, compare);
+}
