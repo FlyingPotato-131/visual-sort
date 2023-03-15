@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include "algorithms-basic.cpp"
 
@@ -17,6 +18,3 @@ int main()
     }
     std::cout<<std::endl;
 }
-
-
-
