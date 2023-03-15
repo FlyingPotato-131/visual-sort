@@ -277,3 +277,94 @@ void merge_sort(T *first, T *last, bool(*compare)(const T, const T), sf::Uint8 *
     // std::inplace_merge(first, middle, last, compare);
     merge(first, middle, last, compare, pixels, raw, image, window, sprite);
 }
+
+const int RUN = 32;
+
+template <typename T>
+void insertionSort(T*first, int left, int right, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+{
+    for (int i = left + 1; i <= right; i++)
+    {
+        T temp = first[i];
+        int j = i - 1;
+        while (j >= left && !compare(first[j], temp))
+        {
+            first[j+1] = first[j];
+            // pixels[4 * (j + 1)] = pixels[4 * j];
+            // pixels[4 * (j + 1) + 1] = pixels[4 * j] + 1;
+            // pixels[4 * (j + 1) + 2] = pixels[4 * j] + 2;
+            // image->update(pixels + 4*(j + 1), 1, 1, (j + 1) % Width, (j + 1) / Width);
+            j--;
+            // window->clear(sf::Color::Black);
+            // window->draw(*sprite);
+            // window->display();
+        }
+        first[j+1] = temp;
+        updatewindow(pixels, raw, image, window, sprite);
+    }
+}
+
+template <typename T>
+void timmerge(T*first, int l, int m, int r, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+{
+    
+    int len1 = m - l + 1, len2 = r - m;
+    T left[len1], right[len2];
+    for (int i = 0; i < len1; i++)
+        left[i] = first[l + i];
+    for (int i = 0; i < len2; i++)
+        right[i] = first[m + 1 + i];
+
+    int i = 0;
+    int j = 0;
+    int k = l;
+
+    while (i < len1 && j < len2)
+    {
+        if (compare(left[i], right[j]))
+        {
+            first[k] = left[i];
+            i++;
+        }
+        else
+        {
+            first[k] = right[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < len1)
+    {
+        first[k] = left[i];
+        k++;
+        i++;
+    }
+
+    while (j < len2)
+    {
+        first[k] = right[j];
+        k++;
+        j++;
+    }
+    updatewindow(pixels, raw, image, window, sprite);
+}
+
+template <typename T>
+void timSort(T*first, T*last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+{
+    
+    for (int i = 0; i < last - first; i+=RUN)
+        insertionSort(first, i, std::min((i + RUN - 1), int(last - first - 1)), compare, pixels, raw, image, window, sprite);
+
+    for (int size = RUN; size < last - first; size = 2 * size)
+    {
+        for (int left = 0; left < last - first; left += 2 * size)
+        {
+            int mid = left + size - 1;
+            int right = std::min((left + 2 * size - 1), (int(last - first) - 1));
+            if(mid < right)
+                timmerge(first, left, mid, right, compare, pixels, raw, image, window, sprite);
+        }
+    }
+}

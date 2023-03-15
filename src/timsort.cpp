@@ -19,7 +19,7 @@ void insertionSort(T*first, int left, int right, bool(*compare)(const T, const T
 }
 
 template <typename T>
-void merge(T*first, int l, int m, int r, bool(*compare)(const T, const T))
+void timmerge(T*first, int l, int m, int r, bool(*compare)(const T, const T))
 {
 	
 	int len1 = m - l + 1, len2 = r - m;
@@ -77,7 +77,7 @@ void timSort(T*first, T*last, bool(*compare)(const T, const T))
 			int mid = left + size - 1;
 			int right = min((left + 2 * size - 1), (int(last - first) - 1));
 			if(mid < right)
-				merge(first, left, mid, right, compare);
+				timmerge(first, left, mid, right, compare);
 		}
 	}
 }

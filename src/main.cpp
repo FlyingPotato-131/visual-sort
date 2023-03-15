@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	}
 	if(argc > 2){
 		std::string alg(argv[2]);
-		if(alg != "bubblesort" && alg != "shakersort" && alg != "combsort" && alg != "selectionsort" && alg != "quicksort" && alg != "mergesort"){
+		if(alg != "bubblesort" && alg != "shakersort" && alg != "combsort" && alg != "selectionsort" && alg != "quicksort" && alg != "mergesort" && alg != "timsort"){
 			std::cout << "Not a valid sorting algorithm" << std::endl;
 			return 0;
 		}
@@ -108,6 +108,14 @@ int main(int argc, char *argv[]){
         	for (int h = 0; h < Height; ++h)
 	     	{
        			merge_sort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "timsort"){
+			timSort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			timSort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
        		}
        		std::cout << "sorted hue" << std::endl;
         }
