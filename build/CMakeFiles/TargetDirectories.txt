@@ -1,3 +1,0 @@
-/home/anzheeela/Documents/2semLINUX/3laba/visual-sort/build/CMakeFiles/rendersort.dir
-/home/anzheeela/Documents/2semLINUX/3laba/visual-sort/build/CMakeFiles/edit_cache.dir
-/home/anzheeela/Documents/2semLINUX/3laba/visual-sort/build/CMakeFiles/rebuild_cache.dir
