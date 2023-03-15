@@ -172,3 +172,44 @@ void qsort(T *begin, T *end, bool(*compare)(const T, const T)){
         // }
     }
 }
+
+// #include <vector>
+// #include <algorithm>
+
+template <typename T>
+void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T))
+{
+    // std::vector<T> tmp(abs(first - last));
+    T *tmp = new T[abs(first - last)];
+    // T *end = tmp + abs(first - last); 
+    T *i = first;
+    T *j = middle;
+    auto k = tmp;
+
+    while (i != middle && j != last) {
+        if (compare(*i, *j)) {
+            *k++ = *i++;
+        } else {
+            *k++ = *j++;
+        }
+    }
+
+    k = std::copy(i, middle, k);
+    k = std::copy(j, last, k);
+
+    std::copy(tmp, tmp + abs(first - last), first);
+}
+
+template <typename T>
+void merge_sort(T *first, T *last, bool(*compare)(const T, const T))
+{
+    if (abs(first - last) <= 1) {
+        return;
+    }
+
+    T *middle = std::next(first, abs(first - last) / 2);
+    merge_sort(first, middle, compare);
+    merge_sort(middle, last, compare);
+    // std::inplace_merge(first, middle, last, compare);
+    merge(first, middle, last, compare);
+}

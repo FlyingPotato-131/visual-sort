@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	}
 	if(argc > 2){
 		std::string alg(argv[2]);
-		if(alg != "bubblesort" && alg != "shakersort" && alg != "combsort" && alg != "selectionsort" && alg != "quicksort"){
+		if(alg != "bubblesort" && alg != "shakersort" && alg != "combsort" && alg != "selectionsort" && alg != "quicksort" && alg != "mergesort"){
 			std::cout << "Not a valid sorting algorithm" << std::endl;
 			return 0;
 		}
@@ -102,6 +102,14 @@ int main(int argc, char *argv[]){
        			quicksort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
        		}
        		std::cout << "sorted hue" << std::endl;
+        }else if(alg == "mergesort"){
+        	merge_sort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
+        	std::cout << "sorted saturation" << std::endl;
+        	for (int h = 0; h < Height; ++h)
+	     	{
+       			merge_sort<hsv>(raw + h * Width, raw + h * Width + Width, lesshue, pixels, raw, &image, &window, &sprite);	
+       		}
+       		std::cout << "sorted hue" << std::endl;
         }
 
 		while (window.isOpen()){
@@ -113,7 +121,7 @@ int main(int argc, char *argv[]){
 	               	return 0;
 	           	}
 	       	}
-	       	updatewindow(pixels, raw, &image, &window, &sprite);
+	       	// updatewindow(pixels, raw, &image, &window, &sprite);
 		}
 	}else{
 		std::cout << "please specify a sorting algorithm" << std::endl;

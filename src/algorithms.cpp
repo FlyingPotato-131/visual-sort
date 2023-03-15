@@ -22,7 +22,7 @@ void updatewindow(sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWin
         }
     }
     image->update(pixels);
-    // window->clear(sf::Color::Black);
+    window->clear(sf::Color::Black);
     window->draw(*sprite);
     window->display();
 }
@@ -58,7 +58,7 @@ void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
                 // image->update(pixels);
                 image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
                 image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
-                window->clear(sf::Color::Black);
+                // window->clear(sf::Color::Black);
                 window->draw(*sprite);
                 window->display();
             }
@@ -82,7 +82,7 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
             image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
             image->update(pixels + 4*(begin + i - 1 - raw), 1, 1, (begin + i - 1 - raw) % Width, (begin + i - 1 - raw) / Width);
             // image->update(pixels);
-            window->clear(sf::Color::Black);
+            // window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
@@ -97,7 +97,7 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
             // image->update(pixels);
             image->update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width, (begin + i + 1 - raw) / Width);
             image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
-            window->clear(sf::Color::Black);
+            // window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
@@ -122,7 +122,7 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
             image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
             image->update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width, (begin + i + step - raw) / Width);
             // image->update(pixels);
-            window->clear(sf::Color::Black);
+            // window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
 
@@ -142,7 +142,7 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
                 image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
                 image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
                 // image->update(pixels);
-                window->clear(sf::Color::Black);
+                // window->clear(sf::Color::Black);
                 window->draw(*sprite);
                 window->display();
             }
@@ -180,7 +180,7 @@ void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *
         // image->update(pixels);
         image->update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width, (i - raw) / Width);
         image->update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width, (j - raw) / Width);
-        window->clear(sf::Color::Black);
+        // window->clear(sf::Color::Black);
         window->draw(*sprite);
         window->display();
 
@@ -198,7 +198,7 @@ T *partition(T *begin, T *end, Pred predicate, sf::Uint8 *pixels, hsv *raw, sf::
             // image->update(pixels);
             image->update(pixels + 4*(left - raw), 1, 1, (left - raw) % Width, (left - raw) / Width);
             image->update(pixels + 4*(right - raw), 1, 1, (right - raw) % Width, (right - raw) / Width);
-            window->clear(sf::Color::Black);
+            // window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
             // left ++;
@@ -229,7 +229,7 @@ void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pi
             // image->update(pixels);
             image->update(pixels + 4*(begin - raw), 1, 1, (begin - raw) % Width, (begin - raw) / Width);
             image->update(pixels + 4*(pos - raw), 1, 1, (pos - raw) % Width, (pos - raw) / Width);
-            window->clear(sf::Color::Black);
+            // window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
@@ -237,4 +237,43 @@ void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pi
         quicksort(begin, pos, compare, pixels, raw, image, window, sprite);
         quicksort(pos, end, compare, pixels, raw, image, window, sprite);
     }
+}
+
+template <typename T>
+void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+{
+    // std::vector<T> tmp(abs(first - last));
+    T *tmp = new T[abs(first - last)];
+    // T *end = tmp + abs(first - last); 
+    T *i = first;
+    T *j = middle;
+    auto k = tmp;
+
+    while (i != middle && j != last) {
+        if (compare(*i, *j)) {
+            *k++ = *i++;
+        } else {
+            *k++ = *j++;
+        }
+    }
+
+    k = std::copy(i, middle, k);
+    k = std::copy(j, last, k);
+
+    std::copy(tmp, tmp + abs(first - last), first);
+    updatewindow(pixels, raw, image, window, sprite);
+}
+
+template <typename T>
+void merge_sort(T *first, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+{
+    if (abs(first - last) <= 1) {
+        return;
+    }
+
+    T *middle = std::next(first, abs(first - last) / 2);
+    merge_sort(first, middle, compare, pixels, raw, image, window, sprite);
+    merge_sort(middle, last, compare, pixels, raw, image, window, sprite);
+    // std::inplace_merge(first, middle, last, compare);
+    merge(first, middle, last, compare, pixels, raw, image, window, sprite);
 }
