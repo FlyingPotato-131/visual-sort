@@ -45,6 +45,10 @@ int main(int argc, char *argv[]){
 		image.create(Width, Height);
 		sf::Sprite sprite(image);	
 		sprite.setScale(48, 48);
+		// sf::Shader shader = sf::Shader();
+		// shader.loadFromFile("shader.glsl", sf::Shader::Fragment);
+		// shader.setUniform("u_resolution", sf::Glsl::Vec2(Width, Height));
+		// shader.setParameter("texture", sf::Shader::CurrentTexture);
 		for (int h = 0; h < Height - 1; ++h)
 		{
 			for (int w = 0; w < Width; ++w)

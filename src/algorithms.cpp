@@ -55,7 +55,10 @@ void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
             if (compare(begin[j + 1], begin[j])) 
             {
                 swappixels(begin + j, begin + j + 1, raw, pixels);
-                image->update(pixels);
+                // image->update(pixels);
+                image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+                image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
+                window->clear(sf::Color::Black);
                 window->draw(*sprite);
                 window->display();
             }
@@ -76,7 +79,10 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
         if (compare(begin[i], begin[i - 1])) 
         {
             swappixels(begin + i - 1, begin + i, raw, pixels);
-            image->update(pixels);
+            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            image->update(pixels + 4*(begin + i - 1 - raw), 1, 1, (begin + i - 1 - raw) % Width, (begin + i - 1 - raw) / Width);
+            // image->update(pixels);
+            window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
@@ -88,7 +94,10 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
         if (compare(begin[i + 1], begin[i])) 
         {
             swappixels(begin + i, begin + i + 1, raw, pixels);
-            image->update(pixels);
+            // image->update(pixels);
+            image->update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width, (begin + i + 1 - raw) / Width);
+            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
@@ -110,7 +119,10 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
         if (compare(begin[i + step], begin[i])) 
         {
             swappixels(begin + i, begin + i + step, raw, pixels);
-            image->update(pixels);
+            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            image->update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width, (begin + i + step - raw) / Width);
+            // image->update(pixels);
+            window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
 
@@ -127,7 +139,10 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
             if (compare(begin[j + 1], begin[j])) 
             {
                 swappixels(begin + j, begin + j + 1, raw, pixels);
-                image->update(pixels);
+                image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+                image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
+                // image->update(pixels);
+                window->clear(sf::Color::Black);
                 window->draw(*sprite);
                 window->display();
             }
@@ -162,7 +177,10 @@ void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *
     {
         auto j = min_element(i, end, compare);
         swappixels(i, j, raw, pixels);
-        image->update(pixels);
+        // image->update(pixels);
+        image->update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width, (i - raw) / Width);
+        image->update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width, (j - raw) / Width);
+        window->clear(sf::Color::Black);
         window->draw(*sprite);
         window->display();
 
@@ -177,7 +195,10 @@ T *partition(T *begin, T *end, Pred predicate, sf::Uint8 *pixels, hsv *raw, sf::
     while(right - left > 0){
         if(predicate(left) == 0 && predicate(right) == 1){
             swappixels(left, right, raw, pixels);
-            image->update(pixels);
+            // image->update(pixels);
+            image->update(pixels + 4*(left - raw), 1, 1, (left - raw) % Width, (left - raw) / Width);
+            image->update(pixels + 4*(right - raw), 1, 1, (right - raw) % Width, (right - raw) / Width);
+            window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
             // left ++;
@@ -205,7 +226,10 @@ void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pi
     
         if(compare(*pos, *begin)){
             swappixels(begin, pos, raw, pixels);
-            image->update(pixels);
+            // image->update(pixels);
+            image->update(pixels + 4*(begin - raw), 1, 1, (begin - raw) % Width, (begin - raw) / Width);
+            image->update(pixels + 4*(pos - raw), 1, 1, (pos - raw) % Width, (pos - raw) / Width);
+            window->clear(sf::Color::Black);
             window->draw(*sprite);
             window->display();
         }
