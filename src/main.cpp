@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 		std::mt19937 rng(dev());
 		std::uniform_int_distribution<> dis(0, 359);	
 		std::uniform_real_distribution<> fdis(0, 1);
-		sf::RenderWindow window(sf::VideoMode(Width, Height), "Sort Render");
+		sf::RenderWindow window(sf::VideoMode(Width * 48, Height * 48), "Sort Render");
 		sf::Uint8 *pixels = new sf::Uint8[Width * Height * 4];
 		hsv *raw = new hsv[Width * Height];
 		sf::Texture image;
