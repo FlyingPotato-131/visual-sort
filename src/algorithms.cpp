@@ -8,8 +8,8 @@
 #include <queue>
 #include "globals.hpp"
 
-void updatewindow(sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite){
-    for (int h = 0; h < Height - 1; ++h)
+void updatewindow(sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform){
+    for (int h = 0; h < Height; ++h)
     {
         for (int w = 0; w < Width; ++w)
         {
@@ -21,9 +21,13 @@ void updatewindow(sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWin
             pixels[4 * (h * Width + w) + 3] = 255;  
         }
     }
-    image->update(pixels);
+    for (int i = 0; i < Height; ++i){
+        image[0].update(pixels + Width * 4 * i, 20, 1, 0, i);
+        image[1].update(pixels + Width * 2 + Width * 4 * i, 20, 1, 0, i);
+    }
     window->clear(sf::Color::Black);
-    window->draw(*sprite);
+    for(int i = 0; i < 2; i++)
+        window->draw(sprite[i], transform[i]);
     window->display();
 }
 
@@ -46,7 +50,7 @@ void swappixels(T *a, T *b, T *begin, sf::Uint8 *pixels){
 }
 
 template <typename T>
-void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     for (size_t i = 0; i + 1 < end - begin; ++i) 
     {
@@ -56,10 +60,21 @@ void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
             {
                 swappixels(begin + j, begin + j + 1, raw, pixels);
                 // image->update(pixels);
-                image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
-                image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
-                // window->clear(sf::Color::Black);
-                window->draw(*sprite);
+                // image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+                // image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
+                // // window->clear(sf::Color::Black);
+                // window->draw(*sprite);
+                if((begin + j - raw) % Width >= Width / 2)
+                    image[1].update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width - Width / 2, (begin + j - raw) / Width);
+                else
+                    image[0].update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+                if((begin + j + 1 - raw) % Width >= Width / 2)
+                    image[1].update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width - Width / 2, (begin + j + 1 - raw) / Width);
+                else
+                    image[0].update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
+        // window->draw(*sprite, transform);
+                for(int i = 0; i < 2; i++)
+                    window->draw(sprite[i], transform[i]);
                 window->display();
             }
         }
@@ -69,7 +84,7 @@ void bubblesort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
 
 
 template <typename T>
-void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite) 
+void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform) 
 {
   int left = 0;
   int right = end - begin - 1;
@@ -79,11 +94,22 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
         if (compare(begin[i], begin[i - 1])) 
         {
             swappixels(begin + i - 1, begin + i, raw, pixels);
-            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
-            image->update(pixels + 4*(begin + i - 1 - raw), 1, 1, (begin + i - 1 - raw) % Width, (begin + i - 1 - raw) / Width);
-            // image->update(pixels);
-            // window->clear(sf::Color::Black);
-            window->draw(*sprite);
+            // image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            // image->update(pixels + 4*(begin + i - 1 - raw), 1, 1, (begin + i - 1 - raw) % Width, (begin + i - 1 - raw) / Width);
+            // // image->update(pixels);
+            // // window->clear(sf::Color::Black);
+            // window->draw(*sprite);
+            if((begin + i - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width - Width / 2, (begin + i - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            if((begin + i -1 - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i -1 - raw), 1, 1, (begin + i -1 - raw) % Width - Width / 2, (begin + i -1 - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i -1 - raw), 1, 1, (begin + i -1 - raw) % Width, (begin + i -1 - raw) / Width);
+        // window->draw(*sprite, transform);
+            for(int i = 0; i < 2; i++)
+                window->draw(sprite[i], transform[i]);
             window->display();
         }
     }
@@ -95,10 +121,21 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
         {
             swappixels(begin + i, begin + i + 1, raw, pixels);
             // image->update(pixels);
-            image->update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width, (begin + i + 1 - raw) / Width);
-            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
-            // window->clear(sf::Color::Black);
-            window->draw(*sprite);
+            // image->update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width, (begin + i + 1 - raw) / Width);
+            // image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            // // window->clear(sf::Color::Black);
+            // window->draw(*sprite);
+            if((begin + i - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width - Width / 2, (begin + i - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            if((begin + i + 1 - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width - Width / 2, (begin + i + 1 - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i + 1 - raw), 1, 1, (begin + i + 1 - raw) % Width, (begin + i + 1 - raw) / Width);
+        // window->draw(*sprite, transform);
+            for(int i = 0; i < 2; i++)
+                window->draw(sprite[i], transform[i]);
             window->display();
         }
     }
@@ -108,7 +145,7 @@ void ShakerSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pix
 }
 
 template <typename T>
-void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite) 
+void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform) 
 {
     const double factor = 1.247; 
     int step = end - begin - 1;
@@ -119,11 +156,22 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
         if (compare(begin[i + step], begin[i])) 
         {
             swappixels(begin + i, begin + i + step, raw, pixels);
-            image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
-            image->update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width, (begin + i + step - raw) / Width);
-            // image->update(pixels);
-            // window->clear(sf::Color::Black);
-            window->draw(*sprite);
+            // image->update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            // image->update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width, (begin + i + step - raw) / Width);
+            // // image->update(pixels);
+            // // window->clear(sf::Color::Black);
+            // window->draw(*sprite);
+            if((begin + i - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width - Width / 2, (begin + i - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+            if((begin + i + step - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width - Width / 2, (begin + i + step - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin + i + step - raw), 1, 1, (begin + i + step - raw) % Width, (begin + i + step - raw) / Width);
+        // window->draw(*sprite, transform);
+            for(int i = 0; i < 2; i++)
+                window->draw(sprite[i], transform[i]);
             window->display();
 
         }
@@ -139,11 +187,22 @@ void CombSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixel
             if (compare(begin[j + 1], begin[j])) 
             {
                 swappixels(begin + j, begin + j + 1, raw, pixels);
-                image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
-                image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
-                // image->update(pixels);
-                // window->clear(sf::Color::Black);
-                window->draw(*sprite);
+                // image->update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+                // image->update(pixels + 4*(begin + j + 1 - raw), 1, 1, (begin + j + 1 - raw) % Width, (begin + j + 1 - raw) / Width);
+                // // image->update(pixels);
+                // // window->clear(sf::Color::Black);
+                // window->draw(*sprite);
+                if((begin + i - raw) % Width >= Width / 2)
+                    image[1].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width - Width / 2, (begin + i - raw) / Width);
+                else
+                    image[0].update(pixels + 4*(begin + i - raw), 1, 1, (begin + i - raw) % Width, (begin + i - raw) / Width);
+                if((begin + j - raw) % Width >= Width / 2)
+                    image[1].update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width - Width / 2, (begin + j - raw) / Width);
+                else
+                    image[0].update(pixels + 4*(begin + j - raw), 1, 1, (begin + j - raw) % Width, (begin + j - raw) / Width);
+        // window->draw(*sprite, transform);
+                for(int i = 0; i < 2; i++)
+                    window->draw(sprite[i], transform[i]);
                 window->display();
             }
         }
@@ -171,35 +230,53 @@ T* min_element(T* first, T* last, bool(*compare)(const T, const T))
 
 
 template <typename T>
-void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite) 
+void SelectionSort(T*begin, T*end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform) 
 {
     for (auto i = begin; i != end; ++i) 
     {
         auto j = min_element(i, end, compare);
         swappixels(i, j, raw, pixels);
         // image->update(pixels);
-        image->update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width, (i - raw) / Width);
-        image->update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width, (j - raw) / Width);
+        // image->update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width, (i - raw) / Width);
+        // image->update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width, (j - raw) / Width);
         // window->clear(sf::Color::Black);
-        window->draw(*sprite);
+        if((i - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width - Width / 2, (i - raw) / Width);
+            else
+                image[0].update(pixels + 4*(i - raw), 1, 1, (i - raw) % Width, (i - raw) / Width);
+            if((j - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width - Width / 2, (j - raw) / Width);
+            else
+                image[0].update(pixels + 4*(j - raw), 1, 1, (j - raw) % Width, (j - raw) / Width);
+        // window->draw(*sprite, transform);
+        for(int i = 0; i < 2; i++)
+            window->draw(sprite[i], transform[i]);
         window->display();
 
     }
 }
 
 template<typename T, typename Pred>
-T *partition(T *begin, T *end, Pred predicate, sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite){
+T *partition(T *begin, T *end, Pred predicate, sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform){
     //int len = end - begin;
     T *left = begin + 1;
     T *right = end - 1;
     while(right - left > 0){
         if(predicate(left) == 0 && predicate(right) == 1){
             swappixels(left, right, raw, pixels);
+            // std::cout << (left - raw) / Width << " " << (right - raw) / Width << std::endl;
             // image->update(pixels);
-            image->update(pixels + 4*(left - raw), 1, 1, (left - raw) % Width, (left - raw) / Width);
-            image->update(pixels + 4*(right - raw), 1, 1, (right - raw) % Width, (right - raw) / Width);
+            if((left - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(left - raw), 1, 1, (left - raw) % Width - Width / 2, (left - raw) / Width);
+            else
+                image[0].update(pixels + 4*(left - raw), 1, 1, (left - raw) % Width, (left - raw) / Width);
+            if((right - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(right - raw), 1, 1, (right - raw) % Width - Width / 2, (right - raw) / Width);
+            else
+                image[0].update(pixels + 4*(right - raw), 1, 1, (right - raw) % Width, (right - raw) / Width);
             // window->clear(sf::Color::Black);
-            window->draw(*sprite);
+            for(int i = 0; i < 2; i++)
+                window->draw(sprite[i], transform[i]);
             window->display();
             // left ++;
             // right --;
@@ -213,7 +290,7 @@ T *partition(T *begin, T *end, Pred predicate, sf::Uint8 *pixels, hsv *raw, sf::
 }
 
 template<typename T>
-void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite){
+void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform){
     // if(end - begin == 2){
     //     if(!compare(*begin, begin[1]))
     //         swap(begin, begin + 1);
@@ -221,26 +298,35 @@ void quicksort(T *begin, T *end, bool(*compare)(const T, const T), sf::Uint8 *pi
     // }
     if(end - begin > 1){
         auto leseq = [begin, compare](T *x){return compare(*x, *begin);};
-        T *pos = partition(begin, end, leseq, pixels, raw, image, window, sprite);
+        T *pos = partition(begin, end, leseq, pixels, raw, image, window, sprite, transform);
         // updatewindow(pixels, raw, image, window, sprite);
+        // std::cout << (begin - raw) / Width << " " << (pos - raw) / Width << "; ";
+        // std::cout << (begin - raw) / Width << " " << compare(*pos, *begin) << " ";
     
         if(compare(*pos, *begin)){
             swappixels(begin, pos, raw, pixels);
             // image->update(pixels);
-            image->update(pixels + 4*(begin - raw), 1, 1, (begin - raw) % Width, (begin - raw) / Width);
-            image->update(pixels + 4*(pos - raw), 1, 1, (pos - raw) % Width, (pos - raw) / Width);
+            if((begin - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(begin - raw), 1, 1, (begin - raw) % Width - Width / 2, (begin - raw) / Width);
+            else
+                image[0].update(pixels + 4*(begin - raw), 1, 1, (begin - raw) % Width, (begin - raw) / Width);
+            if((pos - raw) % Width >= Width / 2)
+                image[1].update(pixels + 4*(pos - raw), 1, 1, (pos - raw) % Width - Width / 2, (pos - raw) / Width);
+            else
+                image[0].update(pixels + 4*(pos - raw), 1, 1, (pos - raw) % Width, (pos - raw) / Width);
             // window->clear(sf::Color::Black);
-            window->draw(*sprite);
+            for (int i = 0; i < 2; ++i)
+                window->draw(sprite[i], transform[i]);
             window->display();
         }
          
-        quicksort(begin, pos, compare, pixels, raw, image, window, sprite);
-        quicksort(pos, end, compare, pixels, raw, image, window, sprite);
+        quicksort(begin, pos, compare, pixels, raw, image, window, sprite, transform);
+        quicksort(pos, end, compare, pixels, raw, image, window, sprite, transform);
     }
 }
 
 template <typename T>
-void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     // std::vector<T> tmp(abs(first - last));
     T *tmp = new T[abs(first - last)];
@@ -261,27 +347,27 @@ void merge(T *first, T *middle, T *last, bool(*compare)(const T, const T), sf::U
     k = std::copy(j, last, k);
 
     std::copy(tmp, tmp + abs(first - last), first);
-    updatewindow(pixels, raw, image, window, sprite);
+    updatewindow(pixels, raw, image, window, sprite, transform);
 }
 
 template <typename T>
-void merge_sort(T *first, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void merge_sort(T *first, T *last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     if (abs(first - last) <= 1) {
         return;
     }
 
     T *middle = std::next(first, abs(first - last) / 2);
-    merge_sort(first, middle, compare, pixels, raw, image, window, sprite);
-    merge_sort(middle, last, compare, pixels, raw, image, window, sprite);
+    merge_sort(first, middle, compare, pixels, raw, image, window, sprite, transform);
+    merge_sort(middle, last, compare, pixels, raw, image, window, sprite, transform);
     // std::inplace_merge(first, middle, last, compare);
-    merge(first, middle, last, compare, pixels, raw, image, window, sprite);
+    merge(first, middle, last, compare, pixels, raw, image, window, sprite, transform);
 }
 
 const int RUN = 32;
 
 template <typename T>
-void insertionSort(T*first, int left, int right, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void insertionSort(T*first, int left, int right, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     for (int i = left + 1; i <= right; i++)
     {
@@ -300,12 +386,12 @@ void insertionSort(T*first, int left, int right, bool(*compare)(const T, const T
             // window->display();
         }
         first[j+1] = temp;
-        updatewindow(pixels, raw, image, window, sprite);
+        updatewindow(pixels, raw, image, window, sprite, transform);
     }
 }
 
 template <typename T>
-void timmerge(T*first, int l, int m, int r, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void timmerge(T*first, int l, int m, int r, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     
     int len1 = m - l + 1, len2 = r - m;
@@ -347,15 +433,15 @@ void timmerge(T*first, int l, int m, int r, bool(*compare)(const T, const T), sf
         k++;
         j++;
     }
-    updatewindow(pixels, raw, image, window, sprite);
+    updatewindow(pixels, raw, image, window, sprite, transform);
 }
 
 template <typename T>
-void timSort(T*first, T*last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite)
+void timSort(T*first, T*last, bool(*compare)(const T, const T), sf::Uint8 *pixels, hsv *raw, sf::Texture *image, sf::RenderWindow *window, sf::Sprite *sprite, sf::RenderStates *transform)
 {
     
     for (int i = 0; i < last - first; i+=RUN)
-        insertionSort(first, i, std::min((i + RUN - 1), int(last - first - 1)), compare, pixels, raw, image, window, sprite);
+        insertionSort(first, i, std::min((i + RUN - 1), int(last - first - 1)), compare, pixels, raw, image, window, sprite, transform);
 
     for (int size = RUN; size < last - first; size = 2 * size)
     {
@@ -364,7 +450,7 @@ void timSort(T*first, T*last, bool(*compare)(const T, const T), sf::Uint8 *pixel
             int mid = left + size - 1;
             int right = std::min((left + 2 * size - 1), (int(last - first) - 1));
             if(mid < right)
-                timmerge(first, left, mid, right, compare, pixels, raw, image, window, sprite);
+                timmerge(first, left, mid, right, compare, pixels, raw, image, window, sprite, transform);
         }
     }
 }

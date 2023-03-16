@@ -1,5 +1,7 @@
-int const Width = 30;
+int const Width = 40;
 int const Height = 20;
+int const resWidth = 1920;
+int const resHeight = 1080;
 
 #include <string>
 char alglist[] = "Valid sorting algorithms:\n   bubblesort\n   shakersort\n   combsort\n   selectionsort\n   quicksort\n   mergesort\n   timsort\n";

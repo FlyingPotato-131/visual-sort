@@ -31,7 +31,7 @@ rgb hsvrgb(hsv col){
 }
 
 
-bool lesssat(hsv c1, hsv c2) {return c1.s > c2.s;}
+bool lesssat(hsv c1, hsv c2) {return c1.s < c2.s;}
 bool lesshue(hsv c1, hsv c2) {return c1.h < c2.h;}
 
 
