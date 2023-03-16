@@ -5,10 +5,11 @@
 #include <string>
 #include <random>
 #include "algorithms.cpp"
-#include <thread>
-#include <mutex>
+// #include <thread>
+// #include <mutex>
 #include <condition_variable>
-#include <queue>
+// #include <queue>
+#include <unistd.h>
 
 int main(int argc, char *argv[]){
 	if(argc < 2){
@@ -61,6 +62,8 @@ int main(int argc, char *argv[]){
 		}
 		
 		updatewindow(pixels, raw, &image, &window, &sprite);
+
+		sleep(2);
 
 		if(alg == "bubblesort"){
 			bubblesort<hsv>(raw, raw + Width * Height, lesssat, pixels, raw, &image, &window, &sprite);
